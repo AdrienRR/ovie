@@ -1,7 +1,7 @@
 # OVIE: One View Is Enough! 
 ### Monocular Training for In-the-Wild Novel View Generation
 
-[![Paper](https://img.shields.io/badge/arXiv-Paper-red?logo=arxiv&logoColor=white)](https://arxiv.org/abs/PAPER_ID)
+[![Paper](https://img.shields.io/badge/arXiv-Paper-red?logo=arxiv&logoColor=white)](https://arxiv.org/abs/2603.23488)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 This repository contains the official implementation and models for **OVIE** (*One View Is Enough! Monocular Training for In-the-Wild Novel View Generation*). 
@@ -213,10 +213,11 @@ If you find our work useful in your research, please consider citing:
 ```bibtex
 @misc{ovie2026,
       title={One View Is Enough! Monocular Training for In-the-Wild Novel View Generation}, 
-      author={Ramanana Rahary, Adrien and Dufour, Nicolas and Perez, Patrick and Picard, David},
+      author={Adrien Ramanana Rahary and Nicolas Dufour and Patrick Perez and David Picard},
       year={2026},
-      eprint={ARXIV_ID},
+      eprint={2603.23488},
       archivePrefix={arXiv},
-      primaryClass={cs.CV}
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2603.23488}, 
 }
 ```
