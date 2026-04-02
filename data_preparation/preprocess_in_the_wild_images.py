@@ -33,7 +33,7 @@ def main(args):
         seed = args.seed + rank
         if rank == 0:
             print(f"Starting rank={rank}, seed={seed}, world_size={world_size}.")
-    except:
+    except Exception:
         print("Failed to initialize DDP. Running in local mode.")
         rank = 0
         device = 0

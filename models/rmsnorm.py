@@ -93,8 +93,8 @@ def precompute_freqs_cis(dim: int, end: int, theta: float = 10000.0):
     Returns:
         torch.Tensor: Precomputed frequency tensor with complex exponentials.
 
-    
-        
+
+
 
     """
     freqs = 1.0 / (theta ** (torch.arange(0, dim, 2)[: (dim // 2)].float() / dim))
@@ -150,7 +150,7 @@ def apply_rotary_emb(
     Returns:
         Tuple[torch.Tensor, torch.Tensor]: Tuple of modified query tensor and key tensor with rotary embeddings.
 
-        
+
 
     """
     xq_ = torch.view_as_complex(xq.float().reshape(*xq.shape[:-1], -1, 2))
@@ -175,6 +175,7 @@ def repeat_kv(x: torch.Tensor, n_rep: int) -> torch.Tensor:
 
 class Attention(nn.Module):
     """Multi-head attention module."""
+
     def __init__(self, args: ModelArgs):
         """
         Initialize the Attention module.
@@ -289,12 +290,18 @@ class Attention(nn.Module):
         values = self.cache_v[:bsz, : start_pos + seqlen]
 
         # repeat k/v heads if n_kv_heads < n_heads
-        keys = repeat_kv(keys, self.n_rep)  # (bs, cache_len + seqlen, n_local_heads, head_dim)
-        values = repeat_kv(values, self.n_rep)  # (bs, cache_len + seqlen, n_local_heads, head_dim)
+        keys = repeat_kv(
+            keys, self.n_rep
+        )  # (bs, cache_len + seqlen, n_local_heads, head_dim)
+        values = repeat_kv(
+            values, self.n_rep
+        )  # (bs, cache_len + seqlen, n_local_heads, head_dim)
 
         xq = xq.transpose(1, 2)  # (bs, n_local_heads, seqlen, head_dim)
-        keys = keys.transpose(1, 2) # (bs, n_local_heads, cache_len + seqlen, head_dim)
-        values = values.transpose(1, 2) # (bs, n_local_heads, cache_len + seqlen, head_dim)
+        keys = keys.transpose(1, 2)  # (bs, n_local_heads, cache_len + seqlen, head_dim)
+        values = values.transpose(
+            1, 2
+        )  # (bs, n_local_heads, cache_len + seqlen, head_dim)
         scores = torch.matmul(xq, keys.transpose(2, 3)) / math.sqrt(self.head_dim)
         if mask is not None:
             scores = scores + mask  # (bs, n_local_heads, seqlen, cache_len + seqlen)
@@ -403,9 +410,7 @@ class TransformerBlock(nn.Module):
             torch.Tensor: Output tensor after applying attention and feedforward layers.
 
         """
-        h = x + self.attention(
-            self.attention_norm(x), start_pos, freqs_cis, mask
-        )
+        h = x + self.attention(self.attention_norm(x), start_pos, freqs_cis, mask)
         out = h + self.feed_forward(self.ffn_norm(h))
         return out
 
@@ -448,9 +453,10 @@ class Transformer(nn.Module):
         )
 
         self.freqs_cis = precompute_freqs_cis(
-            # Note that self.params.max_seq_len is multiplied by 2 because the token limit for the Llama 2 generation of models is 4096. 
+            # Note that self.params.max_seq_len is multiplied by 2 because the token limit for the Llama 2 generation of models is 4096.
             # Adding this multiplier instead of using 4096 directly allows for dynamism of token lengths while training or fine-tuning.
-            self.params.dim // self.params.n_heads, self.params.max_seq_len * 2
+            self.params.dim // self.params.n_heads,
+            self.params.max_seq_len * 2,
         )
 
     @torch.inference_mode()
@@ -473,9 +479,7 @@ class Transformer(nn.Module):
 
         mask = None
         if seqlen > 1:
-            mask = torch.full(
-                (seqlen, seqlen), float("-inf"), device=tokens.device
-            )
+            mask = torch.full((seqlen, seqlen), float("-inf"), device=tokens.device)
 
             mask = torch.triu(mask, diagonal=1)
 
@@ -483,10 +487,9 @@ class Transformer(nn.Module):
             # only for the new sequence. Thus, the matrix of scores is of size
             # (seqlen, cache_len + seqlen), and the only masked entries are (i, j) for
             # j > cache_len + i, since row i corresponds to token cache_len + i.
-            mask = torch.hstack([
-                torch.zeros((seqlen, start_pos), device=tokens.device),
-                mask
-            ]).type_as(h)
+            mask = torch.hstack(
+                [torch.zeros((seqlen, start_pos), device=tokens.device), mask]
+            ).type_as(h)
 
         for layer in self.layers:
             h = layer(h, start_pos, freqs_cis, mask)

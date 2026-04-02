@@ -15,9 +15,7 @@ def hinge_d_loss(logits_real, logits_fake, reduction: str = "mean") -> torch.Ten
 def vanilla_d_loss(logits_real, logits_fake, reduction: str = "mean") -> torch.Tensor:
     """Original GAN discriminator loss."""
     reduce = torch.mean if reduction == "mean" else torch.sum
-    return 0.5 * (
-        reduce(F.softplus(-logits_real)) + reduce(F.softplus(logits_fake))
-    )
+    return 0.5 * (reduce(F.softplus(-logits_real)) + reduce(F.softplus(logits_fake)))
 
 
 def vanilla_g_loss(logits_fake, reduction: str = "mean") -> torch.Tensor:
@@ -27,4 +25,3 @@ def vanilla_g_loss(logits_fake, reduction: str = "mean") -> torch.Tensor:
     if reduction == "sum":
         return -torch.sum(logits_fake)
     raise ValueError(f"Unsupported reduction '{reduction}'")
-

@@ -147,7 +147,6 @@ def novel_view_by_reprojection(
         face_mask_k = torch.ones(B * N * K, dtype=torch.bool, device=device)
 
     # --- Accumulate depth-weighted contributions, but only from non-occluded + front-facing pts ---
-    z_buffer = min_z_per_pixel  # final z-buffer = per-pixel minimum
     rgb_buffer = torch.zeros((total_pixels, C), device=device)
     weight_buffer = torch.zeros((total_pixels,), device=device)
 

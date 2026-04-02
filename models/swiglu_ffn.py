@@ -4,9 +4,7 @@
 # found in the LICENSE file in the root directory of this source tree.
 
 import os
-import torch
 from typing import Callable, Optional
-import warnings
 
 from torch import Tensor, nn
 import torch.nn.functional as F
@@ -27,7 +25,6 @@ class SwiGLUFFN(nn.Module):
         hidden_features = hidden_features or in_features
         self.w12 = nn.Linear(in_features, 2 * hidden_features, bias=bias)
         self.w3 = nn.Linear(hidden_features, out_features, bias=bias)
-
 
     def forward(self, x: Tensor) -> Tensor:
         x12 = self.w12(x)

@@ -543,8 +543,8 @@ def train(config):
             losses_to_check.append(adaptive_weight)
 
         valid_step_flag = torch.tensor(1.0, device=device)
-        for l in losses_to_check:
-            if not torch.isfinite(l):
+        for loss in losses_to_check:
+            if not torch.isfinite(loss):
                 valid_step_flag = torch.tensor(0.0, device=device)
                 break
 

@@ -57,7 +57,7 @@ class RandomWindowCrop:
 
         t_rows = _gen_positions_1d(self.H, self.crop, rows_min)
         l_cols = _gen_positions_1d(self.W, self.crop, cols_min)
-        base_offsets = [(t, l) for t in t_rows for l in l_cols]
+        base_offsets = [(t, c) for t in t_rows for c in l_cols]
 
         offsets = list(base_offsets)
         if num_windows > len(offsets):
@@ -70,7 +70,7 @@ class RandomWindowCrop:
 
             t_more = _gen_positions_1d(self.H, self.crop, rows_t)
             l_more = _gen_positions_1d(self.W, self.crop, cols_t)
-            dense = [(t, l) for t in t_more for l in l_more]
+            dense = [(t, c) for t in t_more for c in l_more]
 
             seen = set(offsets)
             for off in dense:
